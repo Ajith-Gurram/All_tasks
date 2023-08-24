@@ -1,0 +1,14 @@
+#sol{
+    text-align: center;
+    color: green;
+    font-size: 40px;
+}
+.box{
+    text-align: center;
+    justify-content: space-between;
+}
+button{
+    background-color: aquamarine;
+    font-size: 20px;
+    margin: 0 10px;
+}
