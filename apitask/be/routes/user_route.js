@@ -1,11 +1,11 @@
-const express=require('express')
-const router=express.Router()
-const mongoose=require('mongoose')
-const User=mongoose.model("User")
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+var nodemailer = require('nodemailer');
 
-router.post('/register', async(req, res) => {
+router.post('/register', async (req, res) => {
     try {
-        console.log(req.body)
       const { course, board, name, gender, email, adhar, phone, parentName, dateOfBirth, address } = req.body;
      
     //   check whether fields are empty or not
@@ -38,11 +38,71 @@ router.post('/register', async(req, res) => {
       }
   
       res.status(200).json({ message: "User registered successfully" });
+
+      // Send email to admin
+     
+
+      // const message = {
+      //   from:'ajithkumargurram@gmail.com',
+      //   to:'azzuzie.g@gmail.com',
+      //   subject: "New Applicant Registered",
+      //   text: `
+      //     A new applicant has been registered.
+      //     Here are the details:
+      //     Name: ${name}
+      //     Email: ${email}
+      //     Course: ${course}
+      //     Board: ${board}
+      //     Gender: ${gender}
+      //     Adhar: ${adhar}
+      //     Phone: ${phone}
+      //     Parent Name: ${parentName}
+      //     Date of Birth: ${dateOfBirth}
+      //     Address: ${address}
+      //   `,
+      // };
+
+      var transporter=nodemailer.createTransport({
+        service:'gmail',
+        auth:{
+            user:'ajithkumargurram@gmail.com',
+            pass:'cwcaiuhlzslctswh'
+        },
+        tls : { rejectUnauthorized: false }
+    })
+    
+    var message={
+        from:'ajithkumargurram@gmail.com',
+        to:'azzuzie.g@gmail.com',
+        subject:'Node mailer',
+        text:`
+            A new applicant has been registered.
+            Here are the details:
+            Name: ${name}
+            Email: ${email}
+            Course: ${course}
+            Board: ${board}
+            Gender: ${gender}
+            Adhar: ${adhar}
+            Phone: ${phone}
+            Parent Name: ${parentName}
+            Date of Birth: ${dateOfBirth}
+            Address: ${address}
+          `
+    }
+    
+    transporter.sendMail(message,(err,info)=>{
+        if (err){
+            console.log(err)
+        }
+        else{
+            console.log("email sent : "+info.response)
+        }
+    })
+
     } catch (err) {
       return res.status(500).json({ error: err });
     }
   });
-  
-
 
 module.exports = router;
